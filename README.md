@@ -1,12 +1,38 @@
-# React + Vite
+# 🔢 Mantra Counter App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple and elegant counter app built using **React**, **Vite**, **Redux Toolkit**, **Tailwind CSS**, and **React Router**. This app helps you track your daily counts, set personal targets, view progress with interactive **charts and tables**, and toggle between **light and dark themes**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- ✅ Set and track your mantra count for the day
+- 📊 View progress as a graph and tabular history
+- 🎯 Set personal goals and see when you achieve them
+- 🌗 Switch between light and dark modes
+- 🔁 Reset daily or all data with confirmation prompts
+- 💾 Local storage support to persist your progress
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🛠️ Tech Stack
+
+- ⚛️ React + Vite
+- 📦 Redux Toolkit
+- 🎨 Tailwind CSS
+- 🧭 React Router DOM
+- 📈 Recharts (for graphing)
+- 📁 LocalStorage
+  
+---
+
+## 📦 Getting Started
+
+### 1. Clone the Repository
+git clone https://github.com/IshanRastogi98/mantra-counter-app.git
+
+cd mantra-counter-app
+### 2. Install Dependencies
+npm install
+### 3. Run the App
+npm run dev
