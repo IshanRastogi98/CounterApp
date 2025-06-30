@@ -27,45 +27,50 @@ function App() {
     localStorage.setItem("darkMode", JSON.stringify(toggleDark));
   }, [toggleDark]);
 
-  const router = createBrowserRouter([
+  const router = createBrowserRouter(
+    [
+      {
+        path: "/",
+        element: (
+          <div className="flex flex-col justify-between min-h-screen bg-white dark:bg-black text-gray-900 dark:text-gray-100">
+            <Navbar />
+            <Home />
+          </div>
+        ),
+      },
+      {
+        path: "/history",
+        element: (
+          <div className="flex flex-col justify-between min-h-screen">
+            <Navbar />
+            <HistoryStats />
+          </div>
+        ),
+        children: [
+          {
+            path: "statsgraph",
+            element: <StatsGraph />,
+          },
+          {
+            path: "statstable",
+            element: <StatsTable />,
+          },
+        ],
+      },
+      {
+        path: "/about",
+        element: (
+          <div className="flex flex-col justify-between min-h-screen">
+            <Navbar />
+            <About />
+          </div>
+        ),
+      },
+    ],
     {
-      path: "/",
-      element: (
-        <div className="flex flex-col justify-between min-h-screen bg-white dark:bg-black text-gray-900 dark:text-gray-100">
-          <Navbar />
-          <Home />
-        </div>
-      ),
-    },
-    {
-      path: "/history",
-      element: (
-        <div className="flex flex-col justify-between min-h-screen">
-          <Navbar />
-          <HistoryStats />
-        </div>
-      ),
-      children: [
-        {
-          path: "statsgraph",
-          element: <StatsGraph />,
-        },
-        {
-          path: "statstable",
-          element: <StatsTable />,
-        },
-      ],
-    },
-    {
-      path: "/about",
-      element: (
-        <div className="flex flex-col justify-between min-h-screen">
-          <Navbar />
-          <About />
-        </div>
-      ),
-    },
-  ]);
+      basename: "/CounterApp",
+    }
+  );
 
   return (
     <darkContext.Provider value={{ toggleDark, setToggleDark }}>

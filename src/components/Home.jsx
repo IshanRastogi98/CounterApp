@@ -1,37 +1,71 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { increment } from "../features/counter/counterSlice";
+import {
+  changeName,
+  increment,
+  updateTarget,
+} from "../features/counter/counterSlice";
 import ConfirmBox from "./ConfirmBox";
 
 const Home = () => {
-  const count = useSelector((state) => state.counter.count);
-  const date = useSelector((state) => state.counter.date);
-  const target = useSelector((state) => state.counter.tgt);
+  const [date, setDate] = useState(Date().slice(0, 15));
+  const data = useSelector((state) => state.counter.data); // still from Redux
+  const initialName = useSelector((state) => state.counter.name);
+  const [selectedName, setSelectedName] = useState(initialName);
+  const nameData = useMemo(() => {
+    console.log("nameChnaged");
+    return data[1].find((ele) => ele.name === selectedName);
+  }, [data, selectedName]);
+  const dispatch = useDispatch();
+  const [target, setTargetCount] = useState(Number(nameData?.target || 0));
+  const [totalCount, setTotalCount] = useState(
+    Number(nameData?.totalCount || 0)
+  );
+  const [todaysCount, setTodaysCount] = useState(() => {
+    const dateIndex = nameData?.cntVD?.findIndex((ele) => ele.date === date);
+    return Number(nameData?.cntVD?.[dateIndex]?.count || 0);
+  });
+
   const [showInput, setShowInput] = useState(false);
   const [promptTgtCompletion, setPromptTgtCompletion] = useState(false);
-  const dispatch = useDispatch();
   const btnRef = useRef(null);
 
   useEffect(() => {
-    if (target === count && target !== 0) {
-      setPromptTgtCompletion(true);
-    }
-  }, [count, target]);
+    setTargetCount(Number(nameData?.target || 0));
+    setTotalCount(Number(nameData?.totalCount || 0));
+    setTodaysCount(() => {
+      const dateIndex = nameData?.cntVD?.findIndex((ele) => ele.date === date);
+      return Number(nameData?.cntVD?.[dateIndex]?.count || 0);
+    });
+  }, [nameData]);
+
+  useEffect(() => {
+    console.log("savinng surrent name info:", selectedName);
+    dispatch(changeName({ name: selectedName }));
+  }, [selectedName]);
 
   const handleContainerClick = (e) => {
     btnRef.current?.click();
   };
+
   const handleClick = useCallback((e) => {
     e.stopPropagation();
     console.log("Btn clicked");
-    dispatch(increment());
+    dispatch(increment({ name: selectedName }));
+    const updatedTotal = totalCount + 1;
+    setTotalCount(updatedTotal);
+    console.log("target:", target);
+    console.log("updatedToatl:", updatedTotal);
+    if (target == updatedTotal && target !== 0) {
+      setPromptTgtCompletion(true);
+    }
+
     console.log("dispatched");
   });
   const handleTargetChange = useCallback((e) => {
     e.stopPropagation();
     console.log("tgt btn clicked");
     setShowInput(true);
-    console.log("dispatched");
   });
 
   const handleTgtCancel_Ok = useCallback((e) => {
@@ -54,12 +88,16 @@ const Home = () => {
         </button>
         {showInput && (
           <ConfirmBox
+            name={selectedName}
             handleNo={handleTgtCancel_Ok}
             inputBox={showInput}
+            setShowInput={setShowInput}
+            setTargetCount={setTargetCount}
           />
         )}
         {promptTgtCompletion && (
           <ConfirmBox
+            name={selectedName}
             handleOk={handleTgtCancel_Ok}
             tgtCompleted={promptTgtCompletion}
           />
@@ -67,8 +105,23 @@ const Home = () => {
       </div>
 
       <div className="flex flex-col gap-3 justify-between items-center px-4 py-3 bg-gray-100 dark:bg-gray-800 rounded-xl shadow">
-        <span className="font-bold text-4xl">{count}</span>
-        <span className="font-mono">{date}</span>
+        <span className="font-bold text-4xl">{totalCount}</span>
+        <span className="font-mono">
+          <span>{date}: </span> <span>{todaysCount}</span>
+        </span>
+        <select
+          name="name-select"
+          className="px-5 py-2"
+          id="selectBox"
+          onChange={(e) => setSelectedName(e.target.value)}
+          value={selectedName}
+        >
+          {data[1].map((element, index) => (
+            <option className="text-zinc-900" key={index} value={element.name}>
+              {element.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div

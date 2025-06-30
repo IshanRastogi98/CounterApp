@@ -6,6 +6,14 @@ import { updateTarget } from "../features/counter/counterSlice";
 const ConfirmBox = (props) => {
   const iptRef = useRef(null);
   const dispatch = useDispatch();
+
+  const handleTarget = (e)=>{
+    dispatch(updateTarget({name:props.name,value:iptRef.current.value}));
+    props.setTargetCount(Number(iptRef.current.value));
+    console.log("Update target dispatched")
+    props.setShowInput(false);
+  }
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg text-center">
@@ -76,19 +84,7 @@ const ConfirmBox = (props) => {
                 />
                 <div className="flex justify-center gap-4">
                   <button
-                    onClick={(e) => {
-                      const val = iptRef.current.value;
-                      if (!isNaN(val) && val.length !== 0) {
-                        console.log("val,typeof val", val, typeof val);
-                        dispatch(updateTarget(Number(val)));
-                        toast.success("Target Set Successfully!!");
-                      } else {
-                        console.log("val,typeof val", val, typeof val);
-                        toast.error("Target cannot be empty or invalid");
-                        dispatch(updateTarget(Number(0)));
-                      }
-                      props.handleNo(e);
-                    }}
+                    onClick={handleTarget}
                     className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
                   >
                     Yes
